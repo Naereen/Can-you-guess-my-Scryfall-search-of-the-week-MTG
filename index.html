@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title class="english">Can you guess my Scryfall search of the week? Try to be as quick as possible!</title>
-    <title class="french">Peux-tu deviner ma recherche Scryfall de la semaine ? Essaie d'être le plus rapide possible !</title>
+    <title class="english">Can you guess my Scryfall search of the week?! Try to be as quick as possible!</title>
+    <title class="french">Peux-tu deviner ma recherche Scryfall de la semaine ?! Essaie d'être le plus rapide possible !</title>
     <link rel="stylesheet" href="styles.css">
     <meta name="author" content="Lilian Besson (Naereen)">
     <meta name="description" content="A tiny web game for Magic: The Gathering fans: guess the Scryfall search of the week! Bilingual, responsive, and fun.">
@@ -24,16 +24,22 @@
     <div class="container">
 
         <header>
-            <h1 class="english">Can you guess my Scryfall search of the week? Try to be as quick as possible!</h1>
-            <h1 class="french">Peux-tu deviner ma recherche Scryfall de la semaine ? Essaie d'être le plus rapide possible !</h1>
+            <h1 class="english">
+                Can you guess <a href="https://github.com/Naereen">my</a> Scryfall search of the week?!
+                Try to be as quick as possible!
+            </h1>
+            <h1 class="french">
+                Peux-tu deviner <a href="https://github.com/Naereen">ma</a> recherche Scryfall de la semaine ?!
+                Essaie d'être le plus rapide possible !
+            </h1>
         </header>
 
         <button id="generate-btn">
             <div class="english">
-                Generate a random card #<span id="count">0</span>, and try to guess?
+                Generate a random #<span id="count">1</span> card, or try to guess <u>now</u>?
             </div>
             <div class="french">
-                Génère une carte aléatoire #<span id="count">0</span>, et essaie de deviner ?
+                Génère une #<span id="count">1</span> carte aléatoire, ou essaie de deviner <u>maintenant</u> ?
             </div>
         </button>
 
@@ -55,21 +61,28 @@
             Essaie de deviner le critère de recherche que j'ai utilisé cette semaine, en fonction des liens que tu vas trouver dans les différentes cartes que tu obtiens ! Attention, on ne peut pas revenir en arrière, utilise ta mémoire !
             Sois le plus rapide possible, et amuse-toi bien !
         </p>
-
-        <details class="solution">
-            <summary>Show solution / Afficher la solution</summary>
-            <p>
-                <strong>Solution</strong>: The Scryfall search used is:<br>
-                <code>artist:"Maxime Minard"</code><br>
-                <a href="https://scryfall.com/search?q=artist%3A%22Maxime+Minard%22+game%3Apaper" target="_blank">View this search on Scryfall!</a>
-            </p>
-        </details>
     </div>
 
     <footer>
         <div class="language-toggle">
             <button id="toggle-en" class="active">English 🇬🇧</button>
             <button id="toggle-fr">Français 🇫🇷</button>
+        </div>
+
+        <div class="solution">
+            <details>
+                <summary><strong>Solution</strong> ?!</summary>
+                <p>
+                    <span class="english">The Scryfall search used for these #<span id="count">1</span> cards was:</span>
+                    <span class="french">La recherche Scryfall utilisée pour ces #<span id="count">1</span> cartes était :</span>
+                    <br>
+                    <code>artist:"Maxime Minard"</code>
+                    <br>
+                    <a href="https://scryfall.com/search?q=artist%3A%22Maxime+Minard%22+game%3Apaper" target="_blank">
+                        View this search on Scryfall!
+                    </a>
+                </p>
+            </details>
         </div>
 
         <p class="english">
@@ -113,7 +126,7 @@
         const generateBtn = document.getElementById('generate-btn');
 
         // Initialize the counter
-        let count = 0;
+        let count = 1;
         // Update the counter display
         const countSpan = document.getElementById('count');
 
@@ -143,7 +156,9 @@
 
                 if (data.image_uris && data.image_uris.normal) {
                     cardImage.src = data.image_uris.normal;
-                    cardLink.href = data.scryfall_uri; // Set the link to the card's Scryfall page
+                    cardImage.alt = data.name + ' - ' + data.set_name; // Set alt text for accessibility
+                    cardLink.href = data.scryfall_uri + '&merciqui=Lilian'; // Set the link to the card's Scryfall page
+                    cardLink.title = `Click for full-screen.View "${data.name}" on Scryfall (new tab)`; // Set title for the link
 
                     cardImage.onload = () => {
                         cardLink.style.display = 'block';
@@ -168,17 +183,16 @@
         // Add click event to the card image to toggle fullscreen
         // This will allow users to click on the card image to view it in fullscreen mode
         // This is useful for better visibility of the card image
-        const cardImg = document.getElementById('card-image');
 
-        cardImg.addEventListener('click', function (e) {
+        cardImage.addEventListener('click', function (e) {
             e.preventDefault();
             if (!document.fullscreenElement) {
-                if (cardImg.requestFullscreen) {
-                    cardImg.requestFullscreen();
-                } else if (cardImg.webkitRequestFullscreen) { // Safari
-                    cardImg.webkitRequestFullscreen();
-                } else if (cardImg.msRequestFullscreen) { // IE11
-                    cardImg.msRequestFullscreen();
+                if (cardImage.requestFullscreen) {
+                    cardImage.requestFullscreen();
+                } else if (cardImage.webkitRequestFullscreen) { // Safari
+                    cardImage.webkitRequestFullscreen();
+                } else if (cardImage.msRequestFullscreen) { // IE11
+                    cardImage.msRequestFullscreen();
                 }
             } else {
                 if (document.exitFullscreen) {
