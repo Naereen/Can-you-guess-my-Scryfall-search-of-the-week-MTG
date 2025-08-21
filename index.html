@@ -9,6 +9,28 @@
 </head>
 <body>
 
+    <!--
+    # README.md: Description for "Can you guess my Scryfall search of the week?"
+
+    ## Can you guess my Scryfall search of the week?
+
+    This is a tiny web game for Magic: The Gathering fans, powered by the [Scryfall API](https://scryfall.com/docs/api).
+
+    **How to play:**
+    - Click the "Generate a random card" button to reveal a random Magic card matching a secret Scryfall search.
+    - Try to guess the search criteria based on the cards you see.
+    - You can switch between English and French using the language toggle at the bottom.
+    - When you're ready, reveal the solution to see if you guessed correctly!
+
+    **Features:**
+    - Random card generation from a hidden Scryfall search.
+    - Bilingual interface (English and French).
+    - Responsive and simple design.
+    - Not affiliated with Scryfall or Wizards of the Coast—just for fun!
+
+    Enjoy the challenge and see how quickly you can deduce the weekly search!
+    -->
+
     <div class="container">
 
         <header>
@@ -44,9 +66,9 @@
             <details>
                 <summary>Show solution / Afficher la solution</summary>
                 <p>
-                    <strong>Solution:</strong> The Scryfall search used is:<br>
-                    <code>a:"Maxime Minard"</code><br>
-                    <a href="https://scryfall.com/search?q=a%3A%22Maxime+Minard%22+game%3Apaper" target="_blank">View this search on Scryfall!</a>
+                    <strong>Solution</strong>: The Scryfall search used is:<br>
+                    <code>artist:"Maxime Minard"</code><br>
+                    <a href="https://scryfall.com/search?q=artist%3A%22Maxime+Minard%22+game%3Apaper" target="_blank">View this search on Scryfall!</a>
                 </p>
             </details>
         </p>
@@ -54,19 +76,19 @@
 
     <footer>
         <div class="language-toggle">
-            <button id="toggle-en" class="active">English</button>
-            <button id="toggle-fr">Français</button>
+            <button id="toggle-en" class="active">English 🇬🇧</button>
+            <button id="toggle-fr">Français 🇫🇷</button>
         </div>
 
         <p class="english">
             <strong>Note:</strong> This is a fun project and not an official Scryfall feature, obviously...
             <br>
-            This tiny project was made by <a href="https://github.com/Naereen/" target="_blank">Lilian Besson (Naereen)</a>, using HTML/CSS/JavaScript, some help by <a href="https://gemini.google.com/" target="_blank">Google Gemini</a> and <a href="https://github.com/features/copilot" target="_blank">GitHub Copilot</a>, and by using the <a href="https://scryfall.com/docs/api" target="_blank">Scryfall API</a>.
+            This tiny project was made by <a href="https://github.com/Naereen/" target="_blank">Lilian Besson (Naereen)</a>, using HTML/CSS/JavaScript, some help by <a href="https://gemini.google.com/" target="_blank">Google Gemini</a> and <a href="https://github.com/features/copilot" target="_blank">GitHub Copilot</a>, and by using the <a href="https://scryfall.com/docs/api" target="_blank">free and awesome Scryfall API</a>.
         </p>
         <p class="french">
             <strong>Note :</strong> Ceci est un projet amusant et non une fonctionnalité officielle de Scryfall, évidemment...
             <br>
-            Ce petit projet a été réalisé par <a href="https://github.com/Naereen/" target="_blank">Lilian Besson (Naereen)</a>, en utilisant HTML/CSS/JavaScript, avec l'aide de <a href="https://gemini.google.com/" target="_blank">Google Gemini</a> et <a href="https://github.com/features/copilot" target="_blank">GitHub Copilot</a>, et en utilisant l'<a href="https://scryfall.com/docs/api" target="_blank">API Scryfall</a>.
+            Ce petit projet a été réalisé par <a href="https://github.com/Naereen/" target="_blank">Lilian Besson (Naereen)</a>, en utilisant HTML/CSS/JavaScript, avec l'aide de <a href="https://gemini.google.com/" target="_blank">Google Gemini</a> et <a href="https://github.com/features/copilot" target="_blank">GitHub Copilot</a>, et en utilisant <a href="https://scryfall.com/docs/api" target="_blank">l'API gratuite et géniale de Scryfall</a>.
         </p>
     </footer>
 
@@ -109,7 +131,9 @@
 
             try {
                 // Example query, you can change it to your own search criteria
-                const response = await fetch('https://api.scryfall.com/cards/random?q=a%3A"Maxime+Minard"+game%3Apaper&unique=art&as=grid&order=name');
+                const response = await
+                    // TODO change this every weekend or so, to have a new search every week
+                    fetch('https://api.scryfall.com/cards/random?q=artist%3A"Maxime+Minard"+game%3Apaper&unique=art&as=grid&order=name');
 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
