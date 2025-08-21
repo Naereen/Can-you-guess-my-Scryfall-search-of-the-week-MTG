@@ -6,41 +6,35 @@
     <title class="english">Can you guess my Scryfall search of the week? Try to be as quick as possible!</title>
     <title class="french">Peux-tu deviner ma recherche Scryfall de la semaine ? Essaie d'être le plus rapide possible !</title>
     <link rel="stylesheet" href="styles.css">
+    <meta name="author" content="Lilian Besson (Naereen)">
+    <meta name="description" content="A tiny web game for Magic: The Gathering fans: guess the Scryfall search of the week! Bilingual, responsive, and fun.">
+    <meta name="keywords" content="Magic: The Gathering, MTG, Scryfall, game, web game, card game, guessing, bilingual, English, French">
+    <meta name="license" content="MIT License">
+    <meta http-equiv="Content-Language" content="en">
+    <meta name="theme-color" content="#1a1a1a">
+    <meta property="og:title" content="Can you guess my Scryfall search of the week?">
+    <meta property="og:description" content="A fun, bilingual web game for Magic: The Gathering fans. Guess the Scryfall search!">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://github.com/Naereen/Can-you-guess-my-Scryfall-search-of-the-week-MTG">
+    <meta property="og:image" content="https://scryfall.com/favicon.ico">
+    <link rel="icon" href="https://scryfall.com/favicon.ico" type="image/x-icon">
 </head>
 <body>
-
-    <!--
-    # README.md: Description for "Can you guess my Scryfall search of the week?"
-
-    ## Can you guess my Scryfall search of the week?
-
-    This is a tiny web game for Magic: The Gathering fans, powered by the [Scryfall API](https://scryfall.com/docs/api).
-
-    **How to play:**
-    - Click the "Generate a random card" button to reveal a random Magic card matching a secret Scryfall search.
-    - Try to guess the search criteria based on the cards you see.
-    - You can switch between English and French using the language toggle at the bottom.
-    - When you're ready, reveal the solution to see if you guessed correctly!
-
-    **Features:**
-    - Random card generation from a hidden Scryfall search.
-    - Bilingual interface (English and French).
-    - Responsive and simple design.
-    - Not affiliated with Scryfall or Wizards of the Coast—just for fun!
-
-    Enjoy the challenge and see how quickly you can deduce the weekly search!
-    -->
 
     <div class="container">
 
         <header>
-            <h1 class="english">Can you guess my Scryfall search of the week?<br>Try to be as quick as possible!</h1>
-            <h1 class="french">Peux-tu deviner ma recherche Scryfall de la semaine ?<br>Essaie d'être le plus rapide possible !</h1>
+            <h1 class="english">Can you guess my Scryfall search of the week? Try to be as quick as possible!</h1>
+            <h1 class="french">Peux-tu deviner ma recherche Scryfall de la semaine ? Essaie d'être le plus rapide possible !</h1>
         </header>
 
         <button id="generate-btn">
-            <div class="english">Generate a random card, and try to guess?</div>
-            <div class="french">Génère une carte aléatoire, et essaie de deviner ?</div>
+            <div class="english">
+                Generate a random card #<span id="count">0</span>, and try to guess?
+            </div>
+            <div class="french">
+                Génère une carte aléatoire #<span id="count">0</span>, et essaie de deviner ?
+            </div>
         </button>
 
         <div class="card-container">
@@ -91,6 +85,8 @@
     </footer>
 
     <script>
+        // Language toggle functionality
+        // This allows users to switch between English and French content on the page
         const toggleEn = document.getElementById('toggle-en');
         const toggleFr = document.getElementById('toggle-fr');
         const englishElements = document.querySelectorAll('.english');
@@ -112,10 +108,16 @@
 
         // Initialize to English
         toggleEn.click();
-    </script>
 
-    <script>
+        // Get the button and card elements
         const generateBtn = document.getElementById('generate-btn');
+
+        // Initialize the counter
+        let count = 0;
+        // Update the counter display
+        const countSpan = document.getElementById('count');
+
+        // Get the card image and link elements
         const cardImage = document.getElementById('card-image');
         const cardLink = document.getElementById('card-link');
         const message = document.getElementById('message');
@@ -151,6 +153,8 @@
                     cardImage.onerror = () => {
                         message.textContent = 'Failed to load card image.';
                     };
+                    count++;
+                    countSpan.textContent = count;
                 } else {
                     message.textContent = 'Could not find the full card image.';
                 }
@@ -160,6 +164,32 @@
                 message.textContent = 'Failed to fetch card. Please try again later.';
             }
         }
+
+        // Add click event to the card image to toggle fullscreen
+        // This will allow users to click on the card image to view it in fullscreen mode
+        // This is useful for better visibility of the card image
+        const cardImg = document.getElementById('card-image');
+
+        cardImg.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (!document.fullscreenElement) {
+                if (cardImg.requestFullscreen) {
+                    cardImg.requestFullscreen();
+                } else if (cardImg.webkitRequestFullscreen) { // Safari
+                    cardImg.webkitRequestFullscreen();
+                } else if (cardImg.msRequestFullscreen) { // IE11
+                    cardImg.msRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) { // Safari
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) { // IE11
+                    document.msExitFullscreen();
+                }
+            }
+        });
     </script>
 </body>
 </html>

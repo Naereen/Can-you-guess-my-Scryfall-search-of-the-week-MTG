@@ -9,19 +9,19 @@ body {
     margin: 0;
     background-color: #f0f0f0;
     color: #333;
-    line-height: 1.6;
+    line-height: 1.25;
 }
 
 .container {
     max-width: 900px;
-    padding: 20px;
+    padding: 10px;
     text-align: center;
 }
 
 header {
     width: 100%;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 h1 {
@@ -31,7 +31,7 @@ h1 {
 }
 
 .description, .solution {
-    margin: 20px auto;
+    margin: 10px auto;
     max-width: 900px;
     width: 70vw;
     padding: 15px;
@@ -62,7 +62,26 @@ h1 {
 }
 
 #card-image:hover {
-    transform: scale(1.02);
+    transform: scale(1.10);
+}
+
+#card-image.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    max-width: none;
+    max-height: none;
+    object-fit: contain;
+    background: rgba(0,0,0,0.95);
+    z-index: 9999;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    transform: none;
+    transition: none;
+    cursor: zoom-out;
 }
 
 #generate-btn {
@@ -74,7 +93,7 @@ h1 {
     background-color: #007bff;
     color: white;
     border-radius: 5px;
-    margin-top: 20px;
+    margin-top: 10px;
     transition: background-color 0.3s ease, transform 0.1s ease;
 }
 
@@ -99,6 +118,7 @@ h1 {
     align-items: center;
     justify-content: center;
     width: 100%;
+    margin-top: 20px !important;
 }
 
 footer {
