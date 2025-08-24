@@ -10,6 +10,18 @@ body {
     background-color: #f0f0f0;
     color: #333;
     line-height: 1.25;
+
+    /* Add background image */
+    background-image: url("logoADS_transparent.png");
+            background-size: contain;
+         -o-background-size: contain;
+       -moz-background-size: contain;
+    -webkit-background-size: contain;
+    background-repeat:       no-repeat;
+    background-attachment:   fixed;
+    background-position-x:   center;
+    background-position-y:   center;
+    background-color:        transparent;
 }
 
 .container {
@@ -195,7 +207,7 @@ footer summary {
 .language-switch.inactive {
     display: none;
 }
-.language-toggle {
+.language-toggle, .history-reset {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -203,7 +215,7 @@ footer summary {
     gap: 10px;
 }
 
-.language-toggle button {
+.language-toggle button, .history-reset button {
     padding: 8px 18px;
     font-size: 1em;
     font-weight: 600;
@@ -218,13 +230,16 @@ footer summary {
 }
 
 .language-toggle button:hover,
-.language-toggle button:focus {
+.language-toggle button:focus,
+.history-reset button:hover,
+.history-reset button:focus {
     background: linear-gradient(90deg, #0056b3 0%, #7fbcff 100%);
     transform: translateY(-2px) scale(1.04);
     box-shadow: 0 4px 12px rgba(0,123,255,0.18);
 }
 
-.language-toggle button.active {
+.language-toggle button.active,
+.history-reset button.active {
     background: linear-gradient(90deg, #47870f 0%, #66fe00 100%);
     color: #333;
     box-shadow: 0 4px 12px rgba(255,179,71,0.18);

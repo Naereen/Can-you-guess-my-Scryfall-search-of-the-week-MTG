@@ -71,6 +71,13 @@
             <button id="toggle-fr">Français 🇫🇷</button>
         </div>
 
+        <div class="history-reset">
+            <button id="reset-history">
+                <span class="english">Reset history (clear seen cards)</span>
+                <span class="french">Réinitialiser l'historique (effacer les cartes vues)</span>
+            </button>
+        </div>
+
         <div class="solution">
             <details>
                 <summary><strong>Solution</strong> ?!</summary>
@@ -132,6 +139,51 @@
         // Update the counter display
         const countSpan = document.getElementById('count');
 
+        // Keep track of seen card IDs to avoid duplicates
+        const STORAGE_KEY = 'scryfall_seen_card_ids_v1';
+
+        // Load seen IDs from localStorage (if any)
+        let seenCardIds = new Set();
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (raw) {
+                const arr = JSON.parse(raw);
+                if (Array.isArray(arr)) {
+                    seenCardIds = new Set(arr);
+                }
+            }
+        } catch (e) {
+            console.warn('Could not load seenCardIds from localStorage', e);
+            seenCardIds = new Set();
+        }
+
+        function saveSeenCardIds() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(Array.from(seenCardIds)));
+            } catch (e) {
+                console.warn('Could not save seenCardIds to localStorage', e);
+            }
+        }
+
+        // Reset history button: clear seen IDs and localStorage
+        const resetBtn = document.getElementById('reset-history');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', () => {
+                const isFr = toggleFr.classList.contains('active');
+                const confirmMsg = isFr ? "Voulez-vous vraiment réinitialiser l'historique ?" : 'Are you sure you want to reset history?';
+                if (!confirm(confirmMsg)) return;
+
+                seenCardIds.clear();
+                saveSeenCardIds();
+
+                // Reset the counter shown to the user
+                count = 1;
+                countSpan.textContent = count;
+
+                message.textContent = isFr ? 'Historique réinitialisé.' : 'History reset.';
+            });
+        }
+
         // Get the card image and link elements
         const cardImage = document.getElementById('card-image');
         const cardLink = document.getElementById('card-link');
@@ -144,17 +196,58 @@
             cardLink.style.display = 'none';
             cardImage.style.display = 'none';
 
-            try {
-                // Example query, you can change it to your own search criteria
-                const response = await
-                    // TODO change this every weekend or so, to have a new search every week
-                    fetch('https://api.scryfall.com/cards/random?q=power%3D1+toughness%3D0+game%3Apaper&unique=art&as=grid&order=name');
+            let attempts = 0;
+            const maxAttempts = 20; // avoid infinite loops
+            let data = null;
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+            try {
+                // Keep trying until we get a card that hasn't been seen before
+                while (attempts < maxAttempts) {
+                    attempts++;
+
+                    // Example query, you can change it to your own search criteria
+                    const response = await
+                        // TODO change this every weekend or so, to have a new search every week
+                        fetch('https://api.scryfall.com/cards/random?q=power%3D1+toughness%3D0+game%3Apaper&unique=art&as=grid&order=name');
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    data = await response.json();
+
+                    // Basic validation: must have an id and an image
+                    if (!data || !data.id) {
+                        console.warn('Received invalid card data, retrying...', data);
+                        continue;
+                    }
+
+                    // If card has no usable image, skip it
+                    if (!data.image_uris || !data.image_uris.normal) {
+                        console.warn('Card has no full image, retrying...', data.id);
+                        continue;
+                    }
+
+                    // If we've already seen this card, retry
+                    if (seenCardIds.has(data.id)) {
+                        console.warn(`Duplicate card encountered: ${data.id} (attempt ${attempts})`);
+                        continue;
+                    }
+
+                    // Found a new unique card
+                    break;
                 }
 
-                const data = await response.json();
+                // If we exhausted attempts or didn't find a unique card, inform the user
+                if (!data || !data.id || seenCardIds.has(data.id)) {
+                    message.textContent = `Could not find a new unique card after ${maxAttempts} attempts. Please try again later.`;
+                    return;
+                }
+
+                // Mark this card as seen
+                seenCardIds.add(data.id);
+                // Persist the seen IDs so they survive reloads
+                saveSeenCardIds();
 
                 if (data.image_uris && data.image_uris.normal) {
                     cardImage.src = data.image_uris.normal;
