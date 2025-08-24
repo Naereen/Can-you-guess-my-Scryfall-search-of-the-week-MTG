@@ -75,12 +75,12 @@
             <details>
                 <summary><strong>Solution</strong> ?!</summary>
                 <p>
-                    <span class="english">The Scryfall search used for these #<span id="count">1</span> cards was:</span>
-                    <span class="french">La recherche Scryfall utilisée pour ces #<span id="count">1</span> cartes était :</span>
+                    <span class="english">The Scryfall search used for these cards was:</span>
+                    <span class="french">La recherche Scryfall utilisée pour ces cartes était :</span>
                     <br>
-                    <code>artist:"Maxime Minard"</code>
+                    <code>power=1 toughness=0</code>
                     <br>
-                    <a href="https://scryfall.com/search?q=artist%3A%22Maxime+Minard%22+game%3Apaper" target="_blank">
+                    <a href="https://scryfall.com/search?q=power%3D1+toughness%3D0+game%3Apaper" target="_blank">
                         View this search on Scryfall!
                     </a>
                 </p>
@@ -148,7 +148,7 @@
                 // Example query, you can change it to your own search criteria
                 const response = await
                     // TODO change this every weekend or so, to have a new search every week
-                    fetch('https://api.scryfall.com/cards/random?q=artist%3A"Maxime+Minard"+game%3Apaper&unique=art&as=grid&order=name');
+                    fetch('https://api.scryfall.com/cards/random?q=power%3D1+toughness%3D0+game%3Apaper&unique=art&as=grid&order=name');
 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
