@@ -25,7 +25,7 @@ Enjoy the challenge, and see how quickly you can deduce the weekly query I used!
 
 [Play the game here on GitHub](https://naereen.github.io/Can-you-guess-my-Scryfall-search-of-the-week-MTG/)
 
-([Or here on my personnal website](https://perso.crans.org/besson/publis/Can-you-guess-my-Scryfall-search-of-the-week-MTG/))
+([Or here on my personal website](https://perso.crans.org/besson/publis/Can-you-guess-my-Scryfall-search-of-the-week-MTG/))
 
 ## Screenshot of the "game"
 
