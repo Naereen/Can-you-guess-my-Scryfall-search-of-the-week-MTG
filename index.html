@@ -36,10 +36,10 @@
 
         <button id="generate-btn">
             <div class="english">
-                Generate a random #<span id="count">1</span> card, or try to guess <u>now</u>?
+                Generate a random #<span id="count">1</span> card, or stop here and try to guess <em>now</em>?
             </div>
             <div class="french">
-                Génère une #<span id="count">1</span> carte aléatoire, ou essaie de deviner <u>maintenant</u> ?
+                Génère une #<span id="count">1</span> carte aléatoire, ou arrête ici et essaie de deviner <em>maintenant</em> ?
             </div>
         </button>
 
@@ -85,9 +85,9 @@
                     <span class="english">The Scryfall search used for these cards was:</span>
                     <span class="french">La recherche Scryfall utilisée pour ces cartes était :</span>
                     <br>
-                    <code>power=1 toughness=0</code>
+                    <code>banned:legacy legal:vintage year:1993 border:black</code>
                     <br>
-                    <a href="https://scryfall.com/search?q=power%3D1+toughness%3D0+game%3Apaper" target="_blank">
+                    <a href="https://scryfall.com/search?q=banned%3Alegacy+legal%3Avintage+year%3A1993+border%3Ablack&unique=cards&as=grid&order=name" target="_blank">
                         View this search on Scryfall!
                     </a>
                 </p>
@@ -208,7 +208,7 @@
                     // Example query, you can change it to your own search criteria
                     const response = await
                         // TODO change this every weekend or so, to have a new search every week
-                        fetch('https://api.scryfall.com/cards/random?q=power%3D1+toughness%3D0+game%3Apaper&unique=art&as=grid&order=name');
+                        fetch('https://api.scryfall.com/cards/random?q=banned%3Alegacy+legal%3Avintage+year%3A1993+border%3Ablack+game%3Apaper&unique=art&as=grid&order=name');
 
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
