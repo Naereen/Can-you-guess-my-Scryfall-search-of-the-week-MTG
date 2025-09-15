@@ -85,9 +85,9 @@
                     <span class="english">The Scryfall search used for these cards was:</span>
                     <span class="french">La recherche Scryfall utilisée pour ces cartes était :</span>
                     <br>
-                    <code>banned:legacy legal:vintage year:1993 border:black</code>
+                    <code>id=r type=equipment -type=creature game=paper rarity>=r</code>
                     <br>
-                    <a href="https://scryfall.com/search?q=banned%3Alegacy+legal%3Avintage+year%3A1993+border%3Ablack&unique=cards&as=grid&order=name" target="_blank">
+                    <a href="https://scryfall.com/search?q=id%3Dr+type%3Aequipment+-type%3Acreature+game%3Apaper+rarity%3E%3Dr&unique=cards&as=grid&order=name" target="_blank">
                         View this search on Scryfall!
                     </a>
                 </p>
@@ -208,7 +208,7 @@
                     // Example query, you can change it to your own search criteria
                     const response = await
                         // TODO change this every weekend or so, to have a new search every week
-                        fetch('https://api.scryfall.com/cards/random?q=banned%3Alegacy+legal%3Avintage+year%3A1993+border%3Ablack+game%3Apaper&unique=art&as=grid&order=name');
+                        fetch('https://api.scryfall.com/cards/random?q=id%3Dr+type%3Aequipment+-type%3Acreature+game%3Apaper+rarity%3E%3Dr&unique=cards&as=grid&order=name');
 
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);

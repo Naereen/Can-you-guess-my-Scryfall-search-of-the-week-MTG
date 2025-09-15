@@ -59,6 +59,10 @@ h1 {
     border-right-color: #a75228;
 }
 
+code .solution {
+    font-size: 2em;
+}
+
 #card-link {
     display: none; /* Hide until an image is loaded */
     cursor: pointer;
