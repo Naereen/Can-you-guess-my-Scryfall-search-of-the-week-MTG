@@ -39,7 +39,7 @@
                 Generate a random #<span id="count">1</span> card, or stop here and try to guess <em>now</em>?
             </div>
             <div class="french">
-                Génère une #<span id="count">1</span> carte aléatoire, ou arrête ici et essaie de deviner <em>maintenant</em> ?
+                Génère une #<span id="count-fr">1</span> carte aléatoire, ou arrête ici et essaie de deviner <em>maintenant</em> ?
             </div>
         </button>
 
@@ -85,9 +85,9 @@
                     <span class="english">The Scryfall search used for these cards was:</span>
                     <span class="french">La recherche Scryfall utilisée pour ces cartes était :</span>
                     <br>
-                    <code>id=r type=equipment -type=creature game=paper rarity>=r</code>
+                    <code>"princess" or "prince" -type:land</code>
                     <br>
-                    <a href="https://scryfall.com/search?q=id%3Dr+type%3Aequipment+-type%3Acreature+game%3Apaper+rarity%3E%3Dr&unique=cards&as=grid&order=name" target="_blank">
+                    <a href="https://scryfall.com/search?q=%22princess%22+or+%22prince%22+-type%3Aland&unique=cards&as=grid&order=name" target="_blank">
                         View this search on Scryfall!
                     </a>
                 </p>
@@ -136,8 +136,10 @@
 
         // Initialize the counter
         let count = 1;
+        let countFr = 1;
         // Update the counter display
         const countSpan = document.getElementById('count');
+        const countSpanFr = document.getElementById('count-fr');
 
         // Keep track of seen card IDs to avoid duplicates
         const STORAGE_KEY = 'scryfall_seen_card_ids_v1';
@@ -176,9 +178,11 @@
                 seenCardIds.clear();
                 saveSeenCardIds();
 
-                // Reset the counter shown to the user
+                // Reset the counter shown to the user, in both languages
                 count = 1;
+                countFr = 1;
                 countSpan.textContent = count;
+                countSpanFr.textContent = countFr;
 
                 message.textContent = isFr ? 'Historique réinitialisé.' : 'History reset.';
             });
@@ -197,7 +201,7 @@
             cardImage.style.display = 'none';
 
             let attempts = 0;
-            const maxAttempts = 20; // avoid infinite loops
+            const maxAttempts = 30; // avoid infinite loops
             let data = null;
 
             try {
@@ -208,7 +212,7 @@
                     // Example query, you can change it to your own search criteria
                     const response = await
                         // TODO change this every weekend or so, to have a new search every week
-                        fetch('https://api.scryfall.com/cards/random?q=id%3Dr+type%3Aequipment+-type%3Acreature+game%3Apaper+rarity%3E%3Dr&unique=cards&as=grid&order=name');
+                        fetch('https://api.scryfall.com/cards/random?q=%22princess%22+or+%22prince%22+-type%3Aland&unique=cards&as=grid&order=name');
 
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
@@ -264,7 +268,9 @@
                         message.textContent = 'Failed to load card image.';
                     };
                     count++;
+                    countFr++;
                     countSpan.textContent = count;
+                    countSpanFr.textContent = countFr;
                 } else {
                     message.textContent = 'Could not find the full card image.';
                 }
