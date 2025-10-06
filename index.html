@@ -85,9 +85,11 @@
                     <span class="english">The Scryfall search used for these cards was:</span>
                     <span class="french">La recherche Scryfall utilisée pour ces cartes était :</span>
                     <br>
-                    <code>t:samurai game:paper</code>
+                    <code style="font-size: 200%;">
+                        t:food or (oracle:food and t:artifact) game:paper
+                    </code>
                     <br>
-                    <a href="https://scryfall.com/search?q=t%3Asamurai+game%3Apaper&unique=cards&as=grid&order=name" target="_blank">
+                    <a href="https://scryfall.com/search?q=t%3Afood+or+%28oracle%3Afood+and+t%3Aartifact%29&unique=cards&as=grid&order=name" target="_blank">
                         View this search on Scryfall!
                     </a>
                 </p>
@@ -212,7 +214,7 @@
                     // Example query, you can change it to your own search criteria
                     const response = await
                         // TODO change this every weekend or so, to have a new search every week
-                        fetch('https://api.scryfall.com/cards/random?q=t%3Asamurai+game%3Apaper&unique=cards&as=grid&order=name');
+                        fetch('https://api.scryfall.com/cards/random?q=t%3Afood+or+%28oracle%3Afood+and+t%3Aartifact%29+game%3Apaper&unique=cards&as=grid&order=name');
 
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
