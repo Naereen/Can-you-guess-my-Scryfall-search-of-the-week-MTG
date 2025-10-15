@@ -89,7 +89,7 @@
                         t=cleric id=boros game=paper
                     </code>
                     <br>
-                    <a href="https://scryfall.com/search?q=t%3Acleric+id%3Aboros+game%3Apaper&unique=cards&as=grid&order=name" target="_blank">
+                    <a href="https://scryfall.com/search?q=t%3Dcleric+id%3Dboros+game%3Dpaper&unique=cards&as=grid&order=name" target="_blank">
                         View this search on Scryfall!
                     </a>
                 </p>
@@ -214,7 +214,7 @@
                     // Example query, you can change it to your own search criteria
                     const response = await
                         // TODO change this every weekend or so, to have a new search every week
-                        fetch('https://api.scryfall.com/cards/random?q=t%3Acleric+id%3Aboros+game%3Apaper&unique=cards&as=grid&order=name');
+                        fetch('https://api.scryfall.com/cards/random?q=t%3Dcleric+id%3Dboros+game%3Dpaper&unique=cards&as=grid&order=name');
 
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
