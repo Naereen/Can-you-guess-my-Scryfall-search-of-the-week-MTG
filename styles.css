@@ -226,7 +226,7 @@ footer summary {
     gap: 10px;
 }
 
-.language-toggle button, .history-reset button {
+.language-toggle button, .history-reset button, .regenerate button {
     padding: 8px 18px;
     font-size: 1em;
     font-weight: 600;
@@ -273,7 +273,7 @@ footer summary {
     gap: 8px;
 }
 
-.diff-btn, .mode-btn, .regenerate button {
+.diff-btn, .mode-btn {
     padding: 6px 12px;
     border-radius: 12px;
     border: none;
