@@ -38,10 +38,10 @@
 
         <button id="generate-btn">
             <div class="english">
-                Generate an example #<span id="count">1</span> card, or stop here and try to guess <em>now</em>?
+                Generate an example #<span id="count">1</span> card (among XXX in total), or stop here and try to guess <em>now</em>?
             </div>
             <div class="french">
-                Génère une carte exemple #<span id="count-fr">1</span> aléatoire, ou arrête ici et essaie de deviner <em>maintenant</em> ?
+                Génère une carte exemple #<span id="count-fr">1</span> aléatoire (parmi XXX au total), ou arrête ici et essaie de deviner <em>maintenant</em> ?
             </div>
         </button>
 
@@ -84,18 +84,22 @@
             <div class="difficulty">
                 <span class="english">Difficulty:</span>
                 <span class="french">Difficulté :</span>
-                <button id="diff-easy" class="diff-btn active">Easy/Facile</button>
-                <button id="diff-medium" class="diff-btn">Medium/Moyen</button>
-                <button id="diff-hard" class="diff-btn">Hard/Difficile</button>
+                <button id="diff-easy" class="diff-btn active"><span class="english">Easy</span><span class="french">Facile</span></button>
+                <button id="diff-medium" class="diff-btn"><span class="english">Medium</span><span class="french">Moyen</span></button>
+                <button id="diff-hard" class="diff-btn"><span class="english">Hard</span><span class="french">Difficile</span></button>
             </div>
-            <br>
+
+            <br><br><br>
+
             <div class="mode-switch">
                 <span class="english">Mode:</span>
                 <span class="french">Mode :</span>
                 <button id="mode-perload" class="mode-btn active"><span class="english">Per-load</span><span class="french">À chaque chargement</span></button>
                 <button id="mode-weekly" class="mode-btn"><span class="english">Seed weekly</span><span class="french">Seed hebdo</span></button>
             </div>
-            <br>
+
+            <br><br><br>
+
             <div class="regenerate">
                 <button id="regenerate-query">
                     <span class="english">Regenerate query</span>
@@ -105,6 +109,7 @@
                     <strong class="english">Current query:</strong>
                     <strong class="french">Requête actuelle :</strong>
                     <span id="current-query-display">(generating...)</span>
+                    <span id="current-query-badge" class="result-badge" role="status" aria-live="polite" title="Results">—</span>
                     <div class="current-query-results">
                         <span class="english">Results:</span>
                         <span class="french">Résultats :</span>
@@ -194,10 +199,12 @@
         // We'll generate a random human-readable Scryfall query at each page load.
         // The generated value will be stored on `window.SCRYFALL_SEARCH_QUERY` so other parts
         // of the page can reference it (solution link, etc.). A small validation step
-        // calls the Scryfall search endpoint to ensure the query returns at least
-        // `MIN_RESULTS` cards and that at least one has an image.
+        // calls the Scryfall search endpoint to ensure the query returns
+        // at least `MIN_RESULTS` cards, at most `MAX_RESULTS` cards
+        // and that at least one has an image.
 
         const MIN_RESULTS = 10;
+        const MAX_RESULTS = 50;
         const MAX_GENERATION_ATTEMPTS = 30;
 
         // Placeholder while we generate/validate
@@ -333,6 +340,33 @@
                 .replace(/\{cmc_max\}/g, cmc_max)
                 .replace(/\{pow\}/g, pow)
                 .replace(/\{tou\}/g, tou);
+            // Choose a keyword pool depending on difficulty (support keys with hyphens)
+            const keywordPool = (function() {
+                if (!pools) return pools;
+                if (difficulty === 'hard') return pools['keywords-hard'] || pools['keywords'] || [];
+                if (difficulty === 'medium') return pools['keywords-medium'] || pools['keywords'] || [];
+                return pools['keywords'] || [];
+            })();
+
+            // Choose a flavor pool if present
+            const flavorPool = pools && (pools.flavors || pools['flavors']) ? (pools.flavors || pools['flavors']) : [];
+
+            // Replace {keyword} and {flavor} placeholders if present
+            if (/\{keyword\}/.test(tpl) || /o:\{keyword\}/.test(tpl)) {
+                const chosenKeyword = (keywordPool && keywordPool.length)
+                    ? (mode === 'weekly' ? pickRandomWithRNG(keywordPool, rng) : pickRandom(keywordPool))
+                    : '';
+                q = q.replace(/\{keyword\}/g, chosenKeyword);
+                // Also replace o:{keyword} occurrences if template uses that form
+                q = q.replace(/o:\s*\{keyword\}/g, () => 'o:' + encodeURIComponent(chosenKeyword));
+            }
+
+            if (/\{flavor\}/.test(tpl)) {
+                const chosenFlavor = (flavorPool && flavorPool.length)
+                    ? (mode === 'weekly' ? pickRandomWithRNG(flavorPool, rng) : pickRandom(flavorPool))
+                    : '';
+                q = q.replace(/\{flavor\}/g, chosenFlavor);
+            }
 
             q = q.replace(/\s+/g, ' ').trim();
             return q;
@@ -356,7 +390,9 @@
                 // If the API returns no results, consider it invalid
                 const total = Number(json.total_cards || 0);
                 const effectiveMin = (CONFIG && typeof CONFIG.min_results === 'number') ? CONFIG.min_results : MIN_RESULTS;
+                const effectiveMax = (CONFIG && typeof CONFIG.max_results === 'number') ? CONFIG.max_results : MAX_RESULTS;
                 if (total < effectiveMin) return {ok: false, reason: 'too_few_results', total};
+                if (total > effectiveMax) return {ok: false, reason: 'too_many_results', total};
 
                 // Ensure at least one result has an image
                 const data = Array.isArray(json.data) ? json.data : [];
@@ -374,8 +410,10 @@
             if (currentQueryDisplay) currentQueryDisplay.textContent = '(generating...)';
             const resEn = document.getElementById('current-query-results-en');
             const resFr = document.getElementById('current-query-results-fr');
-            if (resEn) resEn.textContent = '(… )';
-            if (resFr) resFr.textContent = '(… )';
+            const badge = document.getElementById('current-query-badge');
+            if (resEn) resEn.textContent = '(…)';
+            if (resFr) resFr.textContent = '(…)';
+            if (badge) { badge.textContent = '…'; badge.title = 'Generating… / Génération…'; }
             let attempt = 0;
             while (attempt < MAX_GENERATION_ATTEMPTS) {
                 attempt++;
@@ -390,6 +428,7 @@
                     // Update bilingual result display (use elements fetched at start of function)
                         if (resEn) resEn.textContent = `${res.total} cards`;
                         if (resFr) resFr.textContent = `${res.total} cartes`;
+                        if (badge) { badge.textContent = res.total; badge.title = `${res.total} cards — ${res.total} cartes`; }
                     // Update the solution code element (if present)
                     const codeEl = document.querySelector('.solution details code');
                     if (codeEl) {
@@ -414,6 +453,7 @@
             if (currentQueryDisplay) currentQueryDisplay.textContent = fallback;
             if (resEn) resEn.textContent = '(fallback)';
             if (resFr) resFr.textContent = '(repli)';
+            if (badge) { badge.textContent = '—'; badge.title = 'Fallback query / Requête de repli'; }
             const codeEl = document.querySelector('.solution details code');
             if (codeEl) codeEl.textContent = ' ' + fallback;
             const link = document.querySelector('.solution details a[href*="scryfall.com/search?q="]');
