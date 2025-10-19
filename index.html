@@ -86,12 +86,29 @@
                     <span class="french">La recherche Scryfall utilisée pour ces cartes était :</span>
                     <br>
                     <code style="font-size: 225%;">
-                        t=cleric id=boros game=paper
+                        <script>
+                        window.addEventListener('DOMContentLoaded', function () {
+                            const codeEl = document.querySelector('.solution details code');
+                            if (!codeEl) return;
+                            if (typeof SCRYFALL_SEARCH_QUERY === 'undefined') return;
+                            // Insert the query as plain text (safe, no HTML parsing)
+                            codeEl.appendChild(document.createTextNode(' ' + String(SCRYFALL_SEARCH_QUERY)));
+                        });
+                        </script>
                     </code>
                     <br>
                     <a href="https://scryfall.com/search?q=t%3Dcleric+id%3Dboros+game%3Dpaper&unique=cards&as=grid&order=name" target="_blank">
                         View this search on Scryfall!
                     </a>
+                    <script>
+                    window.addEventListener('DOMContentLoaded', function () {
+                        if (typeof SCRYFALL_SEARCH_QUERY === 'undefined') return;
+                        const link = document.querySelector('.solution details a[href*="scryfall.com/search?q="]');
+                        if (!link) return;
+                        const base = 'https://scryfall.com/search?q=';
+                        link.href = base + encodeURIComponent(String(SCRYFALL_SEARCH_QUERY)) + '&unique=cards&as=grid&order=name';
+                    });
+                    </script>
                 </p>
             </details>
         </div>
@@ -99,12 +116,12 @@
         <p class="english">
             <strong>Note:</strong> This is a fun project and not an official Scryfall feature, obviously...
             <br>
-            This tiny project was made by <a href="https://github.com/Naereen/" target="_blank">Lilian Besson (Naereen)</a>, using HTML/CSS/JavaScript, some help by <a href="https://gemini.google.com/" target="_blank">Google Gemini</a> and <a href="https://github.com/features/copilot" target="_blank">GitHub Copilot</a>, and by using the <a href="https://scryfall.com/docs/api" target="_blank">free and awesome Scryfall API</a>.
+            This tiny project was made by <a href="https://github.com/Naereen/" target="_blank">Lilian Besson (Naereen)</a>, using HTML/CSS/JavaScript, some occasional help by "vibe coding" tools, <a href="https://gemini.google.com/" target="_blank">Google Gemini</a> and <a href="https://github.com/features/copilot" target="_blank">GitHub Copilot</a>, and by using the <a href="https://scryfall.com/docs/api" target="_blank">free and awesome Scryfall API</a>.
         </p>
         <p class="french">
             <strong>Note :</strong> Ceci est un projet amusant et non une fonctionnalité officielle de Scryfall, évidemment...
             <br>
-            Ce petit projet a été réalisé par <a href="https://github.com/Naereen/" target="_blank">Lilian Besson (Naereen)</a>, en utilisant HTML/CSS/JavaScript, avec l'aide de <a href="https://gemini.google.com/" target="_blank">Google Gemini</a> et <a href="https://github.com/features/copilot" target="_blank">GitHub Copilot</a>, et en utilisant <a href="https://scryfall.com/docs/api" target="_blank">l'API gratuite et géniale de Scryfall</a>.
+            Ce petit projet a été réalisé par <a href="https://github.com/Naereen/" target="_blank">Lilian Besson (Naereen)</a>, en utilisant HTML/CSS/JavaScript, avec l'aide occasionnelle des outils de « vibe coding », <a href="https://gemini.google.com/" target="_blank">Google Gemini</a> et <a href="https://github.com/features/copilot" target="_blank">GitHub Copilot</a>, et en utilisant <a href="https://scryfall.com/docs/api" target="_blank">l'API gratuite et géniale de Scryfall</a>.
         </p>
     </footer>
 
@@ -135,6 +152,16 @@
 
         // Get the button and card elements
         const generateBtn = document.getElementById('generate-btn');
+
+        // ----- Scryfall query configuration (change this to rotate the weekly search) -----
+        // Provide a plain Scryfall query here (human-readable). The code will URL-encode it.
+        // Example: creatures that are bear, of color green, of mana value 2, of power 2 and toughness 2
+        const SCRYFALL_SEARCH_QUERY = 't=creature t=bear color=green cmc=2 power=2 toughness=2 game=paper';
+
+        // Build the full Scryfall random-card URL for the current query
+        function getScryfallRandomUrl() {
+            return 'https://api.scryfall.com/cards/random?q=' + encodeURIComponent(SCRYFALL_SEARCH_QUERY) + '&unique=cards&as=grid&order=name';
+        }
 
         // Initialize the counter
         let count = 1;
@@ -214,7 +241,7 @@
                     // Example query, you can change it to your own search criteria
                     const response = await
                         // TODO change this every weekend or so, to have a new search every week
-                        fetch('https://api.scryfall.com/cards/random?q=t%3Dcleric+id%3Dboros+game%3Dpaper&unique=cards&as=grid&order=name');
+                        fetch(getScryfallRandomUrl());
 
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
