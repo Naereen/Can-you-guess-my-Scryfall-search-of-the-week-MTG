@@ -258,7 +258,7 @@
                 if (data.image_uris && data.image_uris.normal) {
                     cardImage.src = data.image_uris.normal;
                     cardImage.alt = data.name + ' - ' + data.set_name; // Set alt text for accessibility
-                    cardLink.href = data.scryfall_uri + '&merciqui=Lilian'; // Set the link to the card's Scryfall page
+                    cardLink.href = data.scryfall_uri; // Set the link to the card's Scryfall page
                     cardLink.title = `Click for full-screen.View "${data.name}" on Scryfall (new tab)`; // Set title for the link
 
                     cardImage.onload = () => {
