@@ -322,6 +322,15 @@
             const color2 = (mode === 'weekly' ? pickRandomWithRNG : pickRandom)(pools.colors.filter(c => c !== color), rng);
             const type = (mode === 'weekly' ? pickRandomWithRNG : pickRandom)(pools.types, rng);
             const subtype = (mode === 'weekly' ? pickRandomWithRNG : pickRandom)(pools.subtypes, rng);
+            const guild = (pools && Array.isArray(pools.guilds) && pools.guilds.length)
+                ? (mode === 'weekly' ? pickRandomWithRNG : pickRandom)(pools.guilds, rng)
+                : '';
+            const year = (pools && Array.isArray(pools.years) && pools.years.length)
+                ? (mode === 'weekly' ? pickRandomWithRNG : pickRandom)(pools.years, rng)
+                : '';
+            const year1 = (pools && Array.isArray(pools.years) && pools.years.length)
+                ? (mode === 'weekly' ? pickRandomWithRNG : pickRandom)(pools.years.filter(y => y !== year), rng)
+                : '';
             const rarity = (mode === 'weekly' ? pickRandomWithRNG : pickRandom)(pools.rarities, rng);
             const cmcVal = Math.floor((mode === 'weekly' ? rng() : Math.random()) * (difficulty === 'easy' ? 3 : difficulty === 'medium' ? 5 : 7));
             const cmc = String(cmcVal);
@@ -370,6 +379,30 @@
                 q = q.replace(/flavor=\{flavor\}/g, () => 'flavor=' + encodeURIComponent(chosenFlavor));
                 // Replace any remaining {flavor} occurrences with the plain chosen name (useful in free-text templates)
                 q = q.replace(/\{flavor\}/g, chosenFlavor);
+            }
+
+            // Replace {guild} placeholder (and wm={guild} specific form) if present
+            if (/\{guild\}/.test(tpl) || /wm=\{guild\}/.test(tpl)) {
+                const chosenGuild = (guild && guild.length) ? guild : '';
+                if (chosenGuild) {
+                    // encode when used as a parameter (e.g. wm=)
+                    q = q.replace(/wm=\{guild\}/g, () => 'wm=' + encodeURIComponent(chosenGuild));
+                    q = q.replace(/\{guild\}/g, chosenGuild);
+                } else {
+                    // no guild pool: remove the placeholder occurrences
+                    q = q.replace(/wm=\{guild\}/g, '');
+                    q = q.replace(/\{guild\}/g, '');
+                }
+            }
+
+            // Replace {year} and {year1} placeholders if present
+            if (/\{year\}/.test(tpl) || /\{year1\}/.test(tpl)) {
+                const chosenYear = (year && year.length) ? year : '';
+                const chosenYear1 = (year1 && year1.length) ? year1 : '';
+                if (chosenYear) q = q.replace(/\{year\}/g, chosenYear);
+                else q = q.replace(/\{year\}/g, '');
+                if (chosenYear1) q = q.replace(/\{year1\}/g, chosenYear1);
+                else q = q.replace(/\{year1\}/g, '');
             }
 
             q = q.replace(/\s+/g, ' ').trim();
