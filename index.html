@@ -228,9 +228,11 @@
                         continue;
                     }
 
-                    // If card has no usable image, skip it
-                    if (!data.image_uris || !data.image_uris.normal) {
-                        console.warn('Card has no full image, retrying...', data.id);
+                    // If card has no usable image (neither root image_uris nor any card_faces image), skip it
+                    const hasRootImage = data.image_uris && data.image_uris.normal;
+                    const hasFaceImage = Array.isArray(data.card_faces) && data.card_faces.some(face => face.image_uris && face.image_uris.normal);
+                    if (!hasRootImage && !hasFaceImage) {
+                        console.warn('Card has no full image (root or faces), retrying...', data.id);
                         continue;
                     }
 
@@ -255,11 +257,29 @@
                 // Persist the seen IDs so they survive reloads
                 saveSeenCardIds();
 
+                // Determine best image URL (handle single-face and multi-face cards)
+                let imageUrl = null;
+                let altText = (data.name ? data.name : 'Magic: The Gathering card') + (data.set_name ? ' - ' + data.set_name : '');
                 if (data.image_uris && data.image_uris.normal) {
-                    cardImage.src = data.image_uris.normal;
-                    cardImage.alt = data.name + ' - ' + data.set_name; // Set alt text for accessibility
-                    cardLink.href = data.scryfall_uri; // Set the link to the card's Scryfall page
-                    cardLink.title = `Click for full-screen.View "${data.name}" on Scryfall (new tab)`; // Set title for the link
+                    imageUrl = data.image_uris.normal;
+                } else if (Array.isArray(data.card_faces) && data.card_faces.length > 0) {
+                    // prefer the first face that has an image
+                    for (const face of data.card_faces) {
+                        if (face.image_uris && face.image_uris.normal) {
+                            imageUrl = face.image_uris.normal;
+                            if (face.name) altText = face.name + ' (' + (data.name || '') + ')' + (data.set_name ? ' - ' + data.set_name : '');
+                            break;
+                        }
+                    }
+                }
+
+                if (imageUrl) {
+                    cardImage.src = imageUrl;
+                    cardImage.alt = altText; // Set alt text for accessibility
+                    // Build href safely: append query param correctly
+                    const separator = (data.scryfall_uri && data.scryfall_uri.includes('?')) ? '&' : '?';
+                    cardLink.href = (data.scryfall_uri || '#') + separator + 'merciqui=Lilian';
+                    cardLink.title = `Click for full-screen. View "${data.name}" on Scryfall (new tab)`;
 
                     cardImage.onload = () => {
                         cardLink.style.display = 'block';
