@@ -1,5 +1,6 @@
 {
   "min_results": 10,
+  "max_results": 50,
   "pools": {
     "colors": ["white", "blue", "black", "red", "green", "colorless"],
     "types": ["creature", "artifact", "enchantment", "sorcery", "instant", "planeswalker", "land"],
@@ -69,8 +70,7 @@
       "color={color} o:{keyword} game=paper",
       "id={color} o:{keyword} game=paper",
       "t=creature t={subtype} o:{keyword} game=paper",
-      "t={type} color={color}+{color2} game=paper",
-      "t={type} id={color}+{color2} game=paper",
+      "t={type} color<={color} color<={color2} game=paper",
       "t={type} r={rarity} cmc<={cmc} game=paper",
       "flavor={flavor} color={color} game=paper",
       "flavor={flavor} id={color} game=paper",
@@ -89,8 +89,7 @@
     "hard": [
       "t=creature t={subtype} color={color} cmc<={cmc} pow>={pow} r={rarity} game=paper",
       "t=creature t={subtype} id={color} cmc<={cmc} pow>={pow} r={rarity} game=paper",
-      "t={type} color={color}+{color2} cmc>={cmc_min} r={rarity} game=paper",
-      "t={type} id={color}+{color2} cmc>={cmc_min} r={rarity} game=paper",
+      "t={type} (color={color} or color={color2}) cmc>={cmc_min} r={rarity} game=paper",
       "color={color} o:{keyword} cmc<={cmc} game=paper",
       "id={color} o:{keyword} cmc<={cmc} game=paper",
       "t=creature t={subtype} color={color} pow>={pow} o:{keyword} game=paper",
@@ -101,8 +100,7 @@
       "t=creature o:{keyword} game=paper",
       "t={type} color={color} pow>={pow} tou>={tou} r={rarity} game=paper",
       "t={type} id={color} pow>={pow} tou>={tou} r={rarity} game=paper",
-      "o:{keyword} color={color}+{color2} game=paper",
-      "o:{keyword} id={color}+{color2} game=paper",
+      "o:{keyword} (color={color} or color={color2}) game=paper",
       "t=creature t={subtype} pow>={pow} tou>={tou} cmc<={cmc} game=paper",
       "t=creature t={subtype} pow>={pow} tou>={tou} id={color} cmc<={cmc} game=paper",
       "color={color} cmc>=4 r={rarity} game=paper",
@@ -121,5 +119,4 @@
       "flavor={flavor} o:{keyword} cmc<={cmc} r={rarity} game=paper"
     ]
   }
-
 }

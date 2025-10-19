@@ -38,10 +38,10 @@
 
         <button id="generate-btn">
             <div class="english">
-                Generate an example #<span id="count">1</span> card (among <span id="count-total">?</span> in total), or stop here and try to guess <em>now</em>?
+                Generate an example #<span id="count">1</span> card (among <span id="count-total">?</span> in total),<br> or stop here and try to guess <em>now</em>?
             </div>
             <div class="french">
-                Génère une carte exemple #<span id="count-fr">1</span> aléatoire (parmi <span id="count-total-fr">?</span> au total), ou arrête ici et essaie de deviner <em>maintenant</em> ?
+                Génère une carte exemple #<span id="count-fr">1</span> aléatoire (parmi <span id="count-total-fr">?</span> au total),<br> ou arrête ici et essaie de deviner <em>maintenant</em> ?
             </div>
         </button>
 
@@ -106,16 +106,17 @@
                     <span class="french">Régénérer la requête</span>
                 </button>
                 <div class="current-query">
-                    <strong class="english">Current query:</strong>
-                    <strong class="french">Requête actuelle :</strong>
-                    <span id="current-query-display">(generating...)</span>
+                    <!-- Hide the inline "Current query" label + displayed query because the solution details already reveal it. -->
+                    <!-- <strong class="english">Current query:</strong> -->
+                    <!-- <strong class="french">Requête actuelle :</strong> -->
+                    <!-- <span id="current-query-display">(generating...)</span> -->
                     <span id="current-query-badge" class="result-badge" role="status" aria-live="polite" title="Results">—</span>
-                    <div class="current-query-results">
+                    <!-- <div class="current-query-results">
                         <span class="english">Results:</span>
                         <span class="french">Résultats :</span>
                         <span id="current-query-results-en" class="english">(—)</span>
                         <span id="current-query-results-fr" class="french">(—)</span>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
