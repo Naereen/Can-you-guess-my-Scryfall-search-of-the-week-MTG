@@ -427,6 +427,14 @@
                 const q = generateQueryForDifficulty(difficulty, mode);
                 console.log(`Trying query (attempt ${attempt}):`, q);
                 const res = await validateQuery(q);
+                if (res.reason === 'rate_limited') {
+                    // Show a gentle UI hint to the user that Scryfall rate-limited us
+                    if (message) message.textContent = 'Rate limited by Scryfall, waiting briefly before retrying...';
+                    if (badge) { badge.textContent = '⏳'; badge.title = 'Rate limited — waiting before retry / Limité par Scryfall — attente avant réessai'; }
+                    // Wait a bit longer before retrying to be polite
+                    await new Promise(r => setTimeout(r, 1200));
+                    continue;
+                }
                 if (res.ok) {
                     window.SCRYFALL_SEARCH_QUERY = q;
                     if (currentQueryDisplay) {
