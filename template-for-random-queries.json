@@ -16,7 +16,7 @@
     ],
     "types": ["creature", "artifact", "enchantment", "sorcery", "instant", "planeswalker", "land"],
     "subtypes": [
-      "bear","cleric","wizard","elf","goblin","dragon","vampire","soldier","knight","merfolk","zombie","faerie","orc","wolf","ninja", "angel","demon","minotaur","golem","elemental","shaman","rogue","druid","samurai","pirate","beast","construct","hero","hydra","soldier","scout","lich","mutant","illusion","spider"
+      "bear","cleric","wizard","elf","goblin","dragon","vampire","soldier","knight","merfolk","zombie","faerie","orc","wolf","ninja", "angel","demon","minotaur","golem","elemental","shaman","rogue","druid","samurai","pirate","beast","construct","hero","hydra","scout","lich","mutant","illusion","spider","god","scientist","warrior","assassin","champion","archer","barbarian","monk","priest","ranger"
     ],
     "keywords": ["flying","trample","haste","lifelink","deathtouch","reach","menace","vigilance"],
     "keywords-medium": [
