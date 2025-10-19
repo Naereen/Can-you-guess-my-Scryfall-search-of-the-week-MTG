@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title class="english">Can you guess a random Scryfall search?! Try to be as quick as possible!</title>
+    <title class="french">Peux-tu deviner une recherche Scryfall aléatoire ?! Essaie d'être le plus rapide possible !</title>
+    <link rel="stylesheet" href="styles.css">
+    <meta name="author" content="Lilian Besson (Naereen)">
+    <meta name="description" content="A tiny web game for Magic: The Gathering fans: guess the Scryfall search of the week! Bilingual, responsive, and fun.">
+    <meta name="keywords" content="Magic: The Gathering, MTG, Scryfall, game, web game, card game, guessing, bilingual, English, French">
+    <meta name="license" content="MIT License">
+    <meta http-equiv="Content-Language" content="en">
+    <meta name="theme-color" content="#1a1a1a">
+    <meta property="og:title" content="Can you guess a random Scryfall search?! Try to be as quick as possible!">
+    <meta property="og:description" content="A fun, bilingual web game for Magic: The Gathering fans. Guess the Scryfall search!">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://github.com/Naereen/Can-you-guess-my-Scryfall-search-of-the-week-MTG">
+    <meta property="og:image" content="https://scryfall.com/favicon.ico">
+    <link rel="icon" href="https://scryfall.com/favicon.ico" type="image/x-icon">
+</head>
+<body>
+
+    <div class="container">
+
+        <header>
+            <h1 class="english">
+                Can you guess the <em>current Scryfall search</em>?
+                A random search request has been generated when this page loaded.
+                Try to be as quick as possible!
+            </h1>
+            <h1 class="french">
+                Peux-tu deviner <em>la recherche Scryfall actuelle</em> ?
+                Une requête aléatoire a été générée, quand cette page a été chargée.
+                Essaie d'être le plus rapide possible !
+            </h1>
+        </header>
+
+        <button id="generate-btn">
+            <div class="english">
+                Generate an example #<span id="count">1</span> card, or stop here and try to guess <em>now</em>?
+            </div>
+            <div class="french">
+                Génère une carte exemple #<span id="count-fr">1</span> aléatoire, ou arrête ici et essaie de deviner <em>maintenant</em> ?
+            </div>
+        </button>
+
+        <div class="card-container">
+            <a id="card-link" href="#" target="_blank">
+                <img id="card-image" src="" alt="A random Magic: The Gathering card." style="display: none;">
+            </a>
+            <p id="message"></p>
+        </div>
+
+        <p class="description english">
+            Click the button above, to generate a random <a href="https://magic.wizards.com/"><b>Magic: The Gathering</b></a> card from the <a href="https://scryfall.com/">Scryfall API</a>.<br>
+            Try to guess the search criteria that has been right now, based on the cards you receive, by finding a strong similarity between the successive cards!<br>
+            Be careful, you cannot go back, so use your memory!<br>
+            Try to be as quick as possible, and have fun!
+        </p>
+
+        <p class="description french">
+            Clique sur le bouton ci-dessus pour générer une carte <a href="https://magic.wizards.com/"><b>Magic: The Gathering</b></a> aléatoire depuis l'<a href="https://scryfall.com/">API Scryfall</a>.<br>
+            Essaie de deviner le critère de recherche qui a été utilisé cette fois, en fonction des liens que tu vas trouver dans les cartes successives !<br>
+            Attention, on ne peut pas revenir en arrière, utilise ta mémoire !<br>
+            Sois le plus rapide possible, et amuse-toi bien !
+        </p>
+    </div>
+
+    <footer>
+        <div class="language-toggle">
+            <button id="toggle-en" class="active">English 🇬🇧</button>
+            <button id="toggle-fr">Français 🇫🇷</button>
+        </div>
+
+        <div class="history-reset">
+            <button id="reset-history">
+                <span class="english">Reset history (clear seen cards)</span>
+                <span class="french">Réinitialiser l'historique (effacer les cartes vues)</span>
+            </button>
+        </div>
+
+        <div class="generator-controls">
+            <div class="difficulty">
+                <span class="english">Difficulty:</span>
+                <span class="french">Difficulté :</span>
+                <button id="diff-easy" class="diff-btn active">Easy/Facile</button>
+                <button id="diff-medium" class="diff-btn">Medium/Moyen</button>
+                <button id="diff-hard" class="diff-btn">Hard/Difficile</button>
+            </div>
+            <div class="mode-switch">
+                <span class="english">Mode:</span>
+                <span class="french">Mode&nbsp;:</span>
+                <button id="mode-perload" class="mode-btn active"><span class="english">Per-load</span><span class="french">À chaque chargement</span></button>
+                <button id="mode-weekly" class="mode-btn"><span class="english">Seed weekly</span><span class="french">Seed hebdo</span></button>
+            </div>
+            <div class="regenerate">
+                <button id="regenerate-query">
+                    <span class="english">Regenerate query</span>
+                    <span class="french">Régénérer la requête</span>
+                </button>
+                <div class="current-query">
+                    <strong class="english">Current query:</strong>
+                    <strong class="french">Requête actuelle :</strong>
+                    <span id="current-query-display">(generating...)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="solution">
+            <details>
+                <summary><strong>Solution</strong> ?!</summary>
+                <p>
+                    <span class="english">The Scryfall search used for these cards was:</span>
+                    <span class="french">La recherche Scryfall utilisée pour ces cartes était :</span>
+                    <br>
+                    <code style="font-size: 225%;">
+                        <script>
+                        window.addEventListener('DOMContentLoaded', function () {
+                            const codeEl = document.querySelector('.solution details code');
+                            if (!codeEl) return;
+                            if (typeof SCRYFALL_SEARCH_QUERY === 'undefined') return;
+                            // Insert the query as plain text (safe, no HTML parsing)
+                            codeEl.appendChild(document.createTextNode(' ' + String(SCRYFALL_SEARCH_QUERY)));
+                        });
+                        </script>
+                    </code>
+                    <br>
+                    <a href="https://scryfall.com/search?q=t%3Dcleric+id%3Dboros+game%3Dpaper&unique=cards&as=grid&order=name" target="_blank">
+                        View this search on Scryfall!
+                    </a>
+                    <script>
+                    window.addEventListener('DOMContentLoaded', function () {
+                        if (typeof SCRYFALL_SEARCH_QUERY === 'undefined') return;
+                        const link = document.querySelector('.solution details a[href*="scryfall.com/search?q="]');
+                        if (!link) return;
+                        const base = 'https://scryfall.com/search?q=';
+                        link.href = base + encodeURIComponent(String(SCRYFALL_SEARCH_QUERY)) + '&unique=cards&as=grid&order=name';
+                    });
+                    </script>
+                </p>
+            </details>
+        </div>
+
+        <p class="english">
+            <strong>Note:</strong> This is a fun project and not an official Scryfall feature, obviously...
+            <br>
+            This tiny project was made by <a href="https://github.com/Naereen/" target="_blank">Lilian Besson (Naereen)</a>, using HTML/CSS/JavaScript, some occasional help by "vibe coding" tools, <a href="https://gemini.google.com/" target="_blank">Google Gemini</a> and <a href="https://github.com/features/copilot" target="_blank">GitHub Copilot</a>, and by using the <a href="https://scryfall.com/docs/api" target="_blank">free and awesome Scryfall API</a>.
+        </p>
+        <p class="french">
+            <strong>Note :</strong> Ceci est un projet amusant et non une fonctionnalité officielle de Scryfall, évidemment...
+            <br>
+            Ce petit projet a été réalisé par <a href="https://github.com/Naereen/" target="_blank">Lilian Besson (Naereen)</a>, en utilisant HTML/CSS/JavaScript, avec l'aide occasionnelle des outils de « vibe coding », <a href="https://gemini.google.com/" target="_blank">Google Gemini</a> et <a href="https://github.com/features/copilot" target="_blank">GitHub Copilot</a>, et en utilisant <a href="https://scryfall.com/docs/api" target="_blank">l'API gratuite et géniale de Scryfall</a>.
+        </p>
+    </footer>
+
+    <script>
+        // Language toggle functionality
+        // This allows users to switch between English and French content on the page
+        const toggleEn = document.getElementById('toggle-en');
+        const toggleFr = document.getElementById('toggle-fr');
+        const englishElements = document.querySelectorAll('.english');
+        const frenchElements = document.querySelectorAll('.french');
+
+        toggleEn.addEventListener('click', () => {
+            englishElements.forEach(el => el.style.display = 'block');
+            frenchElements.forEach(el => el.style.display = 'none');
+            toggleEn.classList.add('active');
+            toggleFr.classList.remove('active');
+        });
+
+        toggleFr.addEventListener('click', () => {
+            englishElements.forEach(el => el.style.display = 'none');
+            frenchElements.forEach(el => el.style.display = 'block');
+            toggleFr.classList.add('active');
+            toggleEn.classList.remove('active');
+        });
+
+        // Initialize to English
+        toggleEn.click();
+
+        // Get the button and card elements
+        const generateBtn = document.getElementById('generate-btn');
+
+        // ----- Dynamic Scryfall query generation -----
+        // We'll generate a random human-readable Scryfall query at each page load.
+        // The generated value will be stored on `window.SCRYFALL_SEARCH_QUERY` so other parts
+        // of the page can reference it (solution link, etc.). A small validation step
+        // calls the Scryfall search endpoint to ensure the query returns at least
+        // `MIN_RESULTS` cards and that at least one has an image.
+
+        const MIN_RESULTS = 10;
+        const MAX_GENERATION_ATTEMPTS = 30;
+
+        // Placeholder while we generate/validate
+        window.SCRYFALL_SEARCH_QUERY = '(generating...)';
+        const currentQueryDisplay = document.getElementById('current-query-display');
+        if (currentQueryDisplay) currentQueryDisplay.textContent = window.SCRYFALL_SEARCH_QUERY;
+
+        function getScryfallRandomUrl() {
+            const q = typeof window.SCRYFALL_SEARCH_QUERY === 'string' ? window.SCRYFALL_SEARCH_QUERY : '';
+            return 'https://api.scryfall.com/cards/random?q=' + encodeURIComponent(q) + '&unique=cards&as=grid&order=name';
+        }
+
+        // Helpers
+        function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+        // Token pools
+        const POOLS = {
+            colors: ['white','blue','black','red','green'],
+            types: ['creature','artifact','enchantment','sorcery','instant','planeswalker','land'],
+            subtypes: ['bear','cleric','wizard','elf','goblin','dragon','vampire','soldier','knight','merfolk','zombie','faerie','orc','wolf','ninja'],
+            rarities: ['common','uncommon','rare','mythic']
+        };
+
+        // Templates per difficulty
+        const TEMPLATES = {
+            easy: [
+                't=creature t={subtype} color={color} game=paper',
+                't={type} color={color} cmc<={cmc} game=paper',
+                'color={color} cmc={cmc} game=paper',
+                't=creature color={color} cmc<={cmc} game=paper'
+            ],
+            medium: [
+                't=creature t={subtype} color={color} cmc<={cmc} r={rarity} game=paper',
+                't={type} color={color} cmc>={cmc_min} cmc<={cmc_max} game=paper',
+                'color={color} pow>={pow} tou<={tou} game=paper'
+            ],
+            hard: [
+                't=creature t={subtype} color={color} cmc<={cmc} pow>={pow} r={rarity} game=paper',
+                't={type} color={color}+{color2} cmc>={cmc_min} r={rarity} game=paper',
+                'color={color} o:flying cmc<={cmc} game=paper'
+            ]
+        };
+
+        function generateQueryForDifficulty(difficulty) {
+            const tpl = pickRandom(TEMPLATES[difficulty] || TEMPLATES.easy);
+            const color = pickRandom(POOLS.colors);
+            const color2 = pickRandom(POOLS.colors.filter(c => c !== color));
+            const type = pickRandom(POOLS.types);
+            const subtype = pickRandom(POOLS.subtypes);
+            const rarity = pickRandom(POOLS.rarities);
+            const cmc = String(Math.floor(Math.random() * (difficulty === 'easy' ? 3 : difficulty === 'medium' ? 5 : 7)) );
+            const cmc_min = String(Math.max(0, Number(cmc) - 2));
+            const cmc_max = String(Math.max(Number(cmc), Number(cmc) + 2));
+            const pow = String(Math.max(0, Math.floor(Math.random() * 6)));
+            const tou = String(Math.max(0, Math.floor(Math.random() * 6)));
+
+            let q = tpl
+                .replace(/\{color2\}/g, color2)
+                .replace(/\{color\}/g, color)
+                .replace(/\{type\}/g, type)
+                .replace(/\{subtype\}/g, subtype)
+                .replace(/\{rarity\}/g, rarity)
+                .replace(/\{cmc\}/g, cmc)
+                .replace(/\{cmc_min\}/g, cmc_min)
+                .replace(/\{cmc_max\}/g, cmc_max)
+                .replace(/\{pow\}/g, pow)
+                .replace(/\{tou\}/g, tou);
+
+            // Clean up accidental double spaces
+            q = q.replace(/\s+/g, ' ').trim();
+            return q;
+        }
+
+        async function validateQuery(q) {
+            const base = 'https://api.scryfall.com/cards/search?q=' + encodeURIComponent(q) + '&unique=cards&page=1';
+            try {
+                const resp = await fetch(base);
+                if (resp.status === 429) {
+                    // rate limited: wait a bit and fail this attempt so caller can retry
+                    console.warn('Scryfall rate limited (429)');
+                    await new Promise(r => setTimeout(r, 1000));
+                    return {ok: false, reason: 'rate_limited'};
+                }
+                if (!resp.ok) {
+                    console.warn('Scryfall search returned error', resp.status);
+                    return {ok: false, reason: 'http_error', status: resp.status};
+                }
+                const json = await resp.json();
+                // If the API returns no results, consider it invalid
+                const total = Number(json.total_cards || 0);
+                if (total < MIN_RESULTS) return {ok: false, reason: 'too_few_results', total};
+
+                // Ensure at least one result has an image
+                const data = Array.isArray(json.data) ? json.data : [];
+                const hasImage = data.some(card => (card.image_uris && card.image_uris.normal) || (Array.isArray(card.card_faces) && card.card_faces.some(f => f.image_uris && f.image_uris.normal)) );
+                if (!hasImage) return {ok: false, reason: 'no_images'};
+
+                return {ok: true, total};
+            } catch (e) {
+                console.error('Error validating query', e);
+                return {ok: false, reason: 'exception'};
+            }
+        }
+
+        async function generateAndApplyQuery(difficulty = 'easy') {
+            if (currentQueryDisplay) currentQueryDisplay.textContent = '(generating...)';
+            let attempt = 0;
+            while (attempt < MAX_GENERATION_ATTEMPTS) {
+                attempt++;
+                const q = generateQueryForDifficulty(difficulty);
+                console.log(`Trying query (attempt ${attempt}):`, q);
+                const res = await validateQuery(q);
+                if (res.ok) {
+                    window.SCRYFALL_SEARCH_QUERY = q;
+                    if (currentQueryDisplay) {
+                        currentQueryDisplay.textContent = q;
+                        currentQueryDisplay.style = 'visibility: hidden;';
+                    }
+                    // Update the solution code element (if present)
+                    const codeEl = document.querySelector('.solution details code');
+                    if (codeEl) {
+                        // clear and set
+                        codeEl.textContent = ' ' + q;
+                    }
+                    // Update solution link
+                    const link = document.querySelector('.solution details a[href*="scryfall.com/search?q="]');
+                    if (link) {
+                        const base = 'https://scryfall.com/search?q=';
+                        link.href = base + encodeURIComponent(String(q)) + '&unique=cards&as=grid&order=name';
+                    }
+                    console.info('Selected query:', q, '->', res.total, 'results');
+                    return {ok: true, q, total: res.total};
+                }
+                // small delay before next attempt to avoid hitting rate limits
+                await new Promise(r => setTimeout(r, 150));
+            }
+            // fallback: keep a default safe query
+            const fallback = 't=creature color=green cmc=2 t=bear power=2 toughness=2 game=paper';
+            window.SCRYFALL_SEARCH_QUERY = fallback;
+            if (currentQueryDisplay) currentQueryDisplay.textContent = fallback;
+            const codeEl = document.querySelector('.solution details code');
+            if (codeEl) codeEl.textContent = ' ' + fallback;
+            const link = document.querySelector('.solution details a[href*="scryfall.com/search?q="]');
+            if (link) link.href = 'https://scryfall.com/search?q=' + encodeURIComponent(fallback) + '&unique=cards&as=grid&order=name';
+            console.warn('Failed to generate a valid query after attempts, using fallback:', fallback);
+            return {ok: false, q: fallback};
+        }
+
+        // Difficulty buttons
+        const diffEasy = document.getElementById('diff-easy');
+        const diffMedium = document.getElementById('diff-medium');
+        const diffHard = document.getElementById('diff-hard');
+        let currentDifficulty = 'easy';
+        function setDifficulty(d) {
+            currentDifficulty = d;
+            [diffEasy, diffMedium, diffHard].forEach(btn => btn && btn.classList.remove('active'));
+            if (d === 'easy') diffEasy && diffEasy.classList.add('active');
+            if (d === 'medium') diffMedium && diffMedium.classList.add('active');
+            if (d === 'hard') diffHard && diffHard.classList.add('active');
+        }
+        if (diffEasy) diffEasy.addEventListener('click', () => setDifficulty('easy'));
+        if (diffMedium) diffMedium.addEventListener('click', () => setDifficulty('medium'));
+        if (diffHard) diffHard.addEventListener('click', () => setDifficulty('hard'));
+
+        // Regenerate button
+        const regenBtn = document.getElementById('regenerate-query');
+        if (regenBtn) regenBtn.addEventListener('click', async () => {
+            regenBtn.disabled = true;
+            regenBtn.textContent = 'Regenerating...';
+            await generateAndApplyQuery(currentDifficulty);
+            // restore labels (bilingual)
+            regenBtn.innerHTML = '<span class="english">Regenerate query</span><span class="french">Régénérer la requête</span>';
+            regenBtn.disabled = false;
+        });
+
+        // Generate initial query on load
+        (async function () {
+            await generateAndApplyQuery(currentDifficulty);
+        })();
+
+        // Initialize the counter
+        let count = 1;
+        let countFr = 1;
+        // Update the counter display
+        const countSpan = document.getElementById('count');
+        const countSpanFr = document.getElementById('count-fr');
+
+        // Keep track of seen card IDs to avoid duplicates
+        const STORAGE_KEY = 'scryfall_seen_card_ids_v1';
+
+        // Load seen IDs from localStorage (if any)
+        let seenCardIds = new Set();
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (raw) {
+                const arr = JSON.parse(raw);
+                if (Array.isArray(arr)) {
+                    seenCardIds = new Set(arr);
+                }
+            }
+        } catch (e) {
+            console.warn('Could not load seenCardIds from localStorage', e);
+            seenCardIds = new Set();
+        }
+
+        function saveSeenCardIds() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(Array.from(seenCardIds)));
+            } catch (e) {
+                console.warn('Could not save seenCardIds to localStorage', e);
+            }
+        }
+
+        // Reset history button: clear seen IDs and localStorage
+        const resetBtn = document.getElementById('reset-history');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', () => {
+                const isFr = toggleFr.classList.contains('active');
+                const confirmMsg = isFr ? "Voulez-vous vraiment réinitialiser l'historique ?" : 'Are you sure you want to reset history?';
+                if (!confirm(confirmMsg)) return;
+
+                seenCardIds.clear();
+                saveSeenCardIds();
+
+                // Reset the counter shown to the user, in both languages
+                count = 1;
+                countFr = 1;
+                countSpan.textContent = count;
+                countSpanFr.textContent = countFr;
+
+                message.textContent = isFr ? 'Historique réinitialisé.' : 'History reset.';
+            });
+        }
+
+        // Get the card image and link elements
+        const cardImage = document.getElementById('card-image');
+        const cardLink = document.getElementById('card-link');
+        const message = document.getElementById('message');
+
+        generateBtn.addEventListener('click', fetchRandomCard);
+
+        async function fetchRandomCard() {
+            message.textContent = 'Fetching a random card...';
+            cardLink.style.display = 'none';
+            cardImage.style.display = 'none';
+
+            let attempts = 0;
+            const maxAttempts = 30; // avoid infinite loops
+            let data = null;
+
+            try {
+                // Keep trying until we get a card that hasn't been seen before
+                while (attempts < maxAttempts) {
+                    attempts++;
+
+                    // Example query, you can change it to your own search criteria
+                    const response = await
+                        // TODO change this every weekend or so, to have a new search every week
+                        fetch(getScryfallRandomUrl());
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    data = await response.json();
+
+                    // Basic validation: must have an id and an image
+                    if (!data || !data.id) {
+                        console.warn('Received invalid card data, retrying...', data);
+                        continue;
+                    }
+
+                    // If card has no usable image (neither root image_uris nor any card_faces image), skip it
+                    const hasRootImage = data.image_uris && data.image_uris.normal;
+                    const hasFaceImage = Array.isArray(data.card_faces) && data.card_faces.some(face => face.image_uris && face.image_uris.normal);
+                    if (!hasRootImage && !hasFaceImage) {
+                        console.warn('Card has no full image (root or faces), retrying...', data.id);
+                        continue;
+                    }
+
+                    // If we've already seen this card, retry
+                    if (seenCardIds.has(data.id)) {
+                        console.warn(`Duplicate card encountered: ${data.id} (attempt ${attempts})`);
+                        continue;
+                    }
+
+                    // Found a new unique card
+                    break;
+                }
+
+                // If we exhausted attempts or didn't find a unique card, inform the user
+                if (!data || !data.id || seenCardIds.has(data.id)) {
+                    message.textContent = `Could not find a new unique card after ${maxAttempts} attempts. Please try again later.`;
+                    return;
+                }
+
+                // Mark this card as seen
+                seenCardIds.add(data.id);
+                // Persist the seen IDs so they survive reloads
+                saveSeenCardIds();
+
+                // Determine best image URL (handle single-face and multi-face cards)
+                let imageUrl = null;
+                let altText = (data.name ? data.name : 'Magic: The Gathering card') + (data.set_name ? ' - ' + data.set_name : '');
+                if (data.image_uris && data.image_uris.normal) {
+                    imageUrl = data.image_uris.normal;
+                } else if (Array.isArray(data.card_faces) && data.card_faces.length > 0) {
+                    // prefer the first face that has an image
+                    for (const face of data.card_faces) {
+                        if (face.image_uris && face.image_uris.normal) {
+                            imageUrl = face.image_uris.normal;
+                            if (face.name) altText = face.name + ' (' + (data.name || '') + ')' + (data.set_name ? ' - ' + data.set_name : '');
+                            break;
+                        }
+                    }
+                }
+
+                if (imageUrl) {
+                    cardImage.src = imageUrl;
+                    cardImage.alt = altText; // Set alt text for accessibility
+                    // Build href safely: append query param correctly
+                    const separator = (data.scryfall_uri && data.scryfall_uri.includes('?')) ? '&' : '?';
+                    cardLink.href = (data.scryfall_uri || '#') + separator + 'merciqui=Lilian';
+                    cardLink.title = `Click for full-screen. View "${data.name}" on Scryfall (new tab)`;
+
+                    cardImage.onload = () => {
+                        cardLink.style.display = 'block';
+                        cardImage.style.display = 'block';
+                        message.textContent = '';
+                    };
+                    cardImage.onerror = () => {
+                        message.textContent = 'Failed to load card image.';
+                    };
+                    count++;
+                    countFr++;
+                    countSpan.textContent = count;
+                    countSpanFr.textContent = countFr;
+                } else {
+                    message.textContent = 'Could not find the full card image.';
+                }
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                message.textContent = 'Failed to fetch card. Please try again later.';
+            }
+        }
+
+        // Add click event to the card image to toggle fullscreen
+        // This will allow users to click on the card image to view it in fullscreen mode
+        // This is useful for better visibility of the card image
+
+        cardImage.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (!document.fullscreenElement) {
+                if (cardImage.requestFullscreen) {
+                    cardImage.requestFullscreen();
+                } else if (cardImage.webkitRequestFullscreen) { // Safari
+                    cardImage.webkitRequestFullscreen();
+                } else if (cardImage.msRequestFullscreen) { // IE11
+                    cardImage.msRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) { // Safari
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) { // IE11
+                    document.msExitFullscreen();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
