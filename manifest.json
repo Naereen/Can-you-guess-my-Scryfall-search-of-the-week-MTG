@@ -1,0 +1,39 @@
+{
+  "name": "Can you guess my Scryfall search of the week?",
+  "short_name": "Scryfall Guess",
+  "description": "A fun, bilingual web game for Magic: The Gathering fans. Guess the Scryfall search based on random cards!",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#1a1a1a",
+  "theme_color": "#1a1a1a",
+  "orientation": "portrait-primary",
+  "lang": "en",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "logoADS_transparent.png",
+      "sizes": "779x781",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "logoADS.png",
+      "sizes": "779x781",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["games", "entertainment"],
+  "screenshots": [
+    {
+      "src": "screenshot-demo1.png",
+      "sizes": "924x516",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Magic: The Gathering card guessing game in action"
+    }
+  ],
+  "scope": "./",
+  "related_applications": [],
+  "prefer_related_applications": false
+}
