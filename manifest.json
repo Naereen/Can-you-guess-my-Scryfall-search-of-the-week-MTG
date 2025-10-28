@@ -29,7 +29,8 @@
       "src": "screenshot-demo1.png",
       "sizes": "924x516",
       "type": "image/png",
-      "form_factor": "wide"
+      "form_factor": "wide",
+      "label": "Magic: The Gathering card guessing game in action"
     }
   ],
   "scope": "./",
