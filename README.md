@@ -1,7 +1,9 @@
-# [Can you guess my Scryfall search of the week? Try to be as quick as possible!](https://naereen.github.io/Can-you-guess-my-Scryfall-search-of-the-week-MTG/)
+# ScryGuess: [Can you guess my Scryfall search of the week? Try to be as quick as possible!](https://naereen.github.io/Can-you-guess-my-Scryfall-search-of-the-week-MTG/)
 
 This is a tiny web game for Magic: The Gathering fans, powered by the [Scryfall API](https://scryfall.com/docs/api).
 Play alone, or challenge your friends!
+
+TODO: soon I'll try to publish this game as an app on the Google Play Store!
 
 ## How to play?
 
