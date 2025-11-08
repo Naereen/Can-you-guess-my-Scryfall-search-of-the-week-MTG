@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title class="english">Can you guess my Scryfall search of the week?! Try to be as quick as possible!</title>
-    <title class="french">Peux-tu deviner ma recherche Scryfall de la semaine ?! Essaie d'être le plus rapide possible !</title>
+    <title class="english">ScryGuess: Can you guess my Scryfall search of the week?! Try to be as quick as possible!</title>
+    <title class="french">ScryGuess : Peux-tu deviner ma recherche Scryfall de la semaine ?! Essaie d'être le plus rapide possible !</title>
     <link rel="stylesheet" href="styles.css">
     <meta name="author" content="Lilian Besson (Naereen)">
     <meta name="description" content="A tiny web game for Magic: The Gathering fans: guess the Scryfall search of the week! Bilingual, responsive, and fun.">
@@ -16,8 +16,8 @@
     <meta property="og:description" content="A fun, bilingual web game for Magic: The Gathering fans. Guess the Scryfall search!">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://github.com/Naereen/Can-you-guess-my-Scryfall-search-of-the-week-MTG">
-    <meta property="og:image" content="https://scryfall.com/favicon.ico">
-    <link rel="icon" href="https://scryfall.com/favicon.ico" type="image/x-icon">
+    <meta property="og:image" content="icons/favicon.ico">
+    <link rel="icon" href="icons/favicon.ico" type="image/x-icon">
     <link rel="manifest" href="manifest.json">
 </head>
 <body>
@@ -119,14 +119,14 @@
             <br>
             <strong>Note:</strong> This is a fun project and not an official Scryfall feature, obviously...
             <br>
-            This tiny project was made by <a href="https://github.com/Naereen/" target="_blank">Lilian Besson (Naereen)</a>, using HTML/CSS/JavaScript, some occasional help by "vibe coding" tools, <a href="https://gemini.google.com/" target="_blank">Google Gemini</a> and <a href="https://github.com/features/copilot" target="_blank">GitHub Copilot</a>, and by using the <a href="https://scryfall.com/docs/api" target="_blank">free and awesome Scryfall API</a>.
+            This tiny project was made during autumn 2025, by <a href="https://github.com/Naereen/" target="_blank">Lilian Besson (Naereen)</a>, using HTML/CSS/JavaScript, some occasional help by "vibe coding" tools, <a href="https://gemini.google.com/" target="_blank">Google Gemini</a> and <a href="https://github.com/features/copilot" target="_blank">GitHub Copilot</a>, and by using the <a href="https://scryfall.com/docs/api" target="_blank">free and awesome Scryfall API</a>.
         </p>
         <p class="french">
             <strong>Nouveau !</strong> Essaie le <a href="guess-a-random-query.html">mode aléatoire expérimental</a> !
             <br>
             <strong>Note :</strong> Ceci est un projet amusant et non une fonctionnalité officielle de Scryfall, évidemment...
             <br>
-            Ce petit projet a été réalisé par <a href="https://github.com/Naereen/" target="_blank">Lilian Besson (Naereen)</a>, en utilisant HTML/CSS/JavaScript, avec l'aide occasionnelle des outils de « vibe coding », <a href="https://gemini.google.com/" target="_blank">Google Gemini</a> et <a href="https://github.com/features/copilot" target="_blank">GitHub Copilot</a>, et en utilisant <a href="https://scryfall.com/docs/api" target="_blank">l'API gratuite et géniale de Scryfall</a>.
+            Ce petit projet a été réalisé à l'automne 2025, par <a href="https://github.com/Naereen/" target="_blank">Lilian Besson (Naereen)</a>, en utilisant HTML/CSS/JavaScript, avec l'aide occasionnelle des outils de « vibe coding », <a href="https://gemini.google.com/" target="_blank">Google Gemini</a> et <a href="https://github.com/features/copilot" target="_blank">GitHub Copilot</a>, et en utilisant <a href="https://scryfall.com/docs/api" target="_blank">l'API gratuite et géniale de Scryfall</a>.
         </p>
     </footer>
 
@@ -359,6 +359,16 @@
                 }
             }
         });
+    </script>
+    <script>
+        // Register a simple service worker to enable PWA behaviors (offline caching of static assets).
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(reg => console.log('ServiceWorker registered:', reg.scope))
+                    .catch(err => console.warn('ServiceWorker registration failed:', err));
+            });
+        }
     </script>
 </body>
 </html>

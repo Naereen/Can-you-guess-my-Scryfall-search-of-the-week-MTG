@@ -1,6 +1,6 @@
 {
   "name": "Can you guess my Scryfall search of the week?",
-  "short_name": "Scryfall Guess",
+  "short_name": "ScryGuess",
   "description": "A fun, bilingual web game for Magic: The Gathering fans. Guess the Scryfall search based on random cards!",
   "start_url": "./index.html",
   "display": "standalone",
@@ -11,13 +11,25 @@
   "dir": "ltr",
   "icons": [
     {
-      "src": "icon-192x192.png",
+      "src": "icons/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-512x512.png",
+      "src": "icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
@@ -42,7 +54,7 @@
       "sizes": "924x516",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "Magic: The Gathering card guessing game in action"
+      "label": "ScryGuess, a Magic: The Gathering card guessing game, in action"
     }
   ],
   "scope": "./",

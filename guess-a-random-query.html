@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title class="english">Can you guess a random Scryfall search?! Try to be as quick as possible!</title>
-    <title class="french">Peux-tu deviner une recherche Scryfall aléatoire ?! Essaie d'être le plus rapide possible !</title>
+    <title class="english">ScryGuess: Can you guess a random Scryfall search?! Try to be as quick as possible!</title>
+    <title class="french">ScryGuess : Peux-tu deviner une recherche Scryfall aléatoire ?! Essaie d'être le plus rapide possible !</title>
     <link rel="stylesheet" href="styles.css">
     <meta name="author" content="Lilian Besson (Naereen)">
     <meta name="description" content="A tiny web game for Magic: The Gathering fans: guess the Scryfall search of the week! Bilingual, responsive, and fun.">
@@ -16,8 +16,8 @@
     <meta property="og:description" content="A fun, bilingual web game for Magic: The Gathering fans. Guess the Scryfall search!">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://github.com/Naereen/Can-you-guess-my-Scryfall-search-of-the-week-MTG">
-    <meta property="og:image" content="https://scryfall.com/favicon.ico">
-    <link rel="icon" href="https://scryfall.com/favicon.ico" type="image/x-icon">
+    <meta property="og:image" content="icons/favicon.ico">
+    <link rel="icon" href="icons/favicon.ico" type="image/x-icon">
     <link rel="manifest" href="manifest.json">
 </head>
 <body>
@@ -755,6 +755,16 @@
                 }
             }
         });
+    </script>
+    <script>
+        // Register a simple service worker to enable PWA behaviors (offline caching of static assets).
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(reg => console.log('ServiceWorker registered:', reg.scope))
+                    .catch(err => console.warn('ServiceWorker registration failed:', err));
+            });
+        }
     </script>
 </body>
 </html>
