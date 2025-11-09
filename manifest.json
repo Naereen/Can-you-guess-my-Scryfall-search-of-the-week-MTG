@@ -29,22 +29,10 @@
       "purpose": "any"
     },
     {
-      "src": "icons/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "logoADS_transparent.png",
-      "sizes": "779x781",
+      "src": "icons/icon-1024x1024.png",
+      "sizes": "1024x1024",
       "type": "image/png",
       "purpose": "any maskable"
-    },
-    {
-      "src": "logoADS.png",
-      "sizes": "779x781",
-      "type": "image/png",
-      "purpose": "any"
     }
   ],
   "categories": ["games", "entertainment"],
