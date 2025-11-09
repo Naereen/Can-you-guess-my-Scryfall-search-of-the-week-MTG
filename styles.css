@@ -11,17 +11,17 @@ body {
     color: #333;
     line-height: 1.25;
 
-    /* Add background image */
-    background-image: url("logoADS_transparent.png");
-            background-size: contain;
-         -o-background-size: contain;
-       -moz-background-size: contain;
-    -webkit-background-size: contain;
-    background-repeat:       no-repeat;
-    background-attachment:   fixed;
-    background-position-x:   center;
-    background-position-y:   center;
-    background-color:        transparent;
+    /* make the background image appear at 80% opacity by layering a translucent overlay */
+    /* background-image: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), url("icons/icon-1024x1024.png"); */
+    background-image: linear-gradient(rgba(255,255,255,0.1), rgba(255,255,255,0.1)), url("logoADS_transparent.png");
+    background-size: contain, contain;
+    -o-background-size: contain, contain;
+    -moz-background-size: contain, contain;
+    -webkit-background-size: contain, contain;
+    background-repeat: no-repeat, no-repeat;
+    background-attachment: fixed, fixed;
+    background-position: center, center;
+    background-blend-mode: normal;
 }
 
 .container {
